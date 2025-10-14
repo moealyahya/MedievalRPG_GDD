@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=3 uid="uid://clf8e20sb6eyb"]
+
+[ext_resource type="Script" uid="uid://u84sap1jqxq1" path="res://player.gd" id="1_i3pqv"]
+[ext_resource type="Texture2D" uid="uid://d2n66vbdaemu2" path="res://Camera Roll.png" id="2_hqtel"]
+[ext_resource type="Texture2D" uid="uid://c2toy2ejc52at" path="res://icon.svg" id="2_sweqy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c0nl8"]
+size = Vector2(132, 119)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1dtnr"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_hqtel")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_sweqy")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_hqtel")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[node name="Player" type="Area2D"]
+position = Vector2(197, 56)
+script = ExtResource("1_i3pqv")
+
+[node name="PlayerCollision" type="CollisionShape2D" parent="."]
+position = Vector2(370, 183.5)
+shape = SubResource("RectangleShape2D_c0nl8")
+metadata/_edit_group_ = true
+
+[node name="PlayerAnimation" type="AnimatedSprite2D" parent="."]
+position = Vector2(369, 180)
+sprite_frames = SubResource("SpriteFrames_1dtnr")
+animation = &"idle"
+metadata/_edit_group_ = true
