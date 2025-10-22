@@ -10,3 +10,7 @@ position = Vector2(952, 420)
 
 [node name="Player" parent="." instance=ExtResource("2_tlwt5")]
 position = Vector2(299, 269)
+speed = 400
+atk_growth_per_level = 100.0
+hp_growth_per_level = 100.0
+speed_run = 800

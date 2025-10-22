@@ -43,6 +43,10 @@ size = Vector2(146.5, 74)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_i3pqv")
+speed = null
+atk_growth_per_level = null
+hp_growth_per_level = null
+speed_run = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1.5, 0)
@@ -63,5 +67,11 @@ shape = SubResource("RectangleShape2D_sweqy")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox"]
 shape = SubResource("RectangleShape2D_2hs0m")
 
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 0.376
+
 [connection signal="body_entered" from="PlayerHitbox" to="." method="_on_player_hitbox_body_entered"]
 [connection signal="body_exited" from="PlayerHitbox" to="." method="_on_player_hitbox_body_exited"]
+[connection signal="body_entered" from="AttackHitbox" to="." method="_on_attack_hitbox_body_entered"]
+[connection signal="body_exited" from="AttackHitbox" to="." method="_on_attack_hitbox_body_exited"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]

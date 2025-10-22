@@ -5,6 +5,7 @@ var player_entred = false
 var player = null	
 var isOnCooldown = false
 var player_in_attack_range = false
+var hp = 20
 
 func _on_routing_ai_body_entered(body: Node2D) -> void:
 	player_entred = true
@@ -21,13 +22,11 @@ func _physics_process(delta: float) -> void:
 	if player_in_attack_range:
 		_enemy_attack()
 
-func _enemy_attack () -> bool:
+func _enemy_attack () -> void:
 	if player.has_method("_player_being_hit") && isOnCooldown == false:
-		player._player_being_hit(10, self)
+		player._player_being_hit(10)
 		isOnCooldown = true
 		$EnemyAttackCooldown.start()
-		return true
-	return false
 
 
 func _on_enemy_attack_cooldown_timeout() -> void:
@@ -42,3 +41,9 @@ func _on_enemy_hitbox_body_entered(body: Node2D) -> void:
 func _on_enemy_hitbox_body_exited(body: Node2D) -> void:
 	if body.has_method("_player_being_hit"):
 		player_in_attack_range = false
+
+func _enemy_being_hit (damage : int) -> void:
+	hp -= damage
+	print("Enemy being hit! HP - " + str(damage) + ", has " + str(hp) + " left.")
+	if hp <= 0:
+		self.queue_free()
