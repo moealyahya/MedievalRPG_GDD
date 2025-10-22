@@ -12,8 +12,9 @@ var hp = level * hp_growth_per_level
 var is_running = false
 var latest_orientation = Vector2.ZERO
 var player_atk_cooldown = false
-var enemy_in_attack_range = false
 var enemy = null
+var is_animation_playing = false
+var attack_box_validity = false
 
 func _player_attack () -> void:
 	pass #So far no idea how to implement combat system, gonna try later
@@ -22,6 +23,7 @@ func _player_attack () -> void:
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
 	speed = 400
+	attack_box_validity = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -41,15 +43,15 @@ func _process(delta: float) -> void:
 	if Input.is_action_pressed("attack_melee"):
 		_slash_attack()
 		
-		
-	if is_running:
-		velocity = velocity.normalized() * speed_run
-		$PlayerAnimation.play("run")
-	elif Input.is_action_pressed("move_down") or Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right") or Input.is_action_pressed("move_up"):
-		velocity = velocity.normalized() * speed
-		$PlayerAnimation.play("walk")
-	else:
-		$PlayerAnimation.play("idle")	
+	if not is_animation_playing:
+		if is_running:
+			velocity = velocity.normalized() * speed_run
+			$PlayerAnimation.play("run")
+		elif Input.is_action_pressed("move_down") or Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right") or Input.is_action_pressed("move_up"):
+			velocity = velocity.normalized() * speed
+			$PlayerAnimation.play("walk")
+		else:
+			$PlayerAnimation.play("idle")	
 	
 	position += velocity * delta
 	position = position.clamp(Vector2.ZERO, screen_size)
@@ -58,13 +60,11 @@ func _process(delta: float) -> void:
 func _on_player_hitbox_body_entered(body: Node2D) -> void:
 	if body.has_method("enemy"):
 		print("enterd")
-	pass # Replace with function body.
 
 
 func _on_player_hitbox_body_exited(body: Node2D) -> void:
 	if body.has_method("enemy"):
 		print("left")
-	pass # Replace with function body.
 
 func _player_being_hit (damage : int) -> void:
 	hp -= damage
@@ -79,29 +79,30 @@ func _get_latest_orientation () -> void:
 		latest_orientation = input_dir
 	
 func _slash_attack() -> void:
-	$AttackHitbox/CollisionShape2D.global_position = global_position + latest_orientation * 140
-	$AttackHitbox/CollisionShape2D.rotation = latest_orientation.angle()
-	$AttackTimer.start()
-	
-	if enemy_in_attack_range && enemy.has_method("_enemy_being_hit") && player_atk_cooldown == false:
-		enemy._enemy_being_hit(10)
-		player_atk_cooldown = true
+	if not player_atk_cooldown:
+		attack_box_validity = true
+		$PlayerAnimation.play("attack")
+		is_animation_playing = true
+		$AttackHitbox/CollisionShape2D.global_position = global_position + latest_orientation * 140
+		$AttackHitbox/CollisionShape2D.rotation = latest_orientation.angle()
 		$AttackTimer.start()
-	
+		player_atk_cooldown = true
 	
 func _on_attack_timer_timeout() -> void:
 	player_atk_cooldown = false
+	$PlayerAnimation.play("idle")
+	is_animation_playing = false
 	$AttackHitbox/CollisionShape2D.global_position = self.position
 	$AttackHitbox/CollisionShape2D.rotation = 0.0
+	attack_box_validity = false
 
 
 func _on_attack_hitbox_body_entered(body: Node2D) -> void:
-	if body.has_method("_enemy_being_hit"):
-		enemy_in_attack_range = true
+	if body.has_method("_enemy_being_hit") and attack_box_validity:
 		enemy = body
+		enemy._enemy_being_hit(10)
 		
 		
 func _on_attack_hitbox_body_exited(body: Node2D) -> void:
-	if body.has_method("_enemy_being_hit"):
-		enemy_in_attack_range = false
+	if body.has_method("_enemdy_being_hit"):
 		enemy = null

@@ -19,6 +19,9 @@ func _on_routing_ai_body_exited(body: Node2D) -> void:
 func _physics_process(delta: float) -> void:
 	if player_entred:
 		position += (player.position - position) / speed
+		$AnimatedSprite2D.play("walk")
+	else:
+		$AnimatedSprite2D.play("idle")
 	if player_in_attack_range:
 		_enemy_attack()
 
