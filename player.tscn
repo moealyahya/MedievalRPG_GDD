@@ -1,22 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://clf8e20sb6eyb"]
+[gd_scene load_steps=9 format=3 uid="uid://clf8e20sb6eyb"]
 
 [ext_resource type="Script" uid="uid://u84sap1jqxq1" path="res://player.gd" id="1_i3pqv"]
+[ext_resource type="Texture2D" uid="uid://dpxl6u8wgf6dl" path="res://Camera Roll1.png" id="2_2hs0m"]
 [ext_resource type="Texture2D" uid="uid://d2n66vbdaemu2" path="res://Camera Roll.png" id="2_hqtel"]
 [ext_resource type="Texture2D" uid="uid://c2toy2ejc52at" path="res://icon.svg" id="2_sweqy"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_c0nl8"]
-size = Vector2(132, 119)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hqtel"]
+size = Vector2(133, 124)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_1dtnr"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_sweqy"]
 animations = [{
-"frames": [],
-"loop": true,
-"name": &"attack",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_hqtel")
+"texture": ExtResource("2_2hs0m")
 }],
 "loop": true,
 "name": &"idle",
@@ -39,17 +35,33 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="Area2D"]
-position = Vector2(197, 56)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sweqy"]
+size = Vector2(132, 126)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2hs0m"]
+size = Vector2(146.5, 74)
+
+[node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_i3pqv")
 
-[node name="PlayerCollision" type="CollisionShape2D" parent="."]
-position = Vector2(370, 183.5)
-shape = SubResource("RectangleShape2D_c0nl8")
-metadata/_edit_group_ = true
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1.5, 0)
+shape = SubResource("RectangleShape2D_hqtel")
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="."]
-position = Vector2(369, 180)
-sprite_frames = SubResource("SpriteFrames_1dtnr")
+sprite_frames = SubResource("SpriteFrames_sweqy")
 animation = &"idle"
-metadata/_edit_group_ = true
+
+[node name="PlayerHitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerHitbox"]
+position = Vector2(2, 0)
+shape = SubResource("RectangleShape2D_sweqy")
+
+[node name="AttackHitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox"]
+shape = SubResource("RectangleShape2D_2hs0m")
+
+[connection signal="body_entered" from="PlayerHitbox" to="." method="_on_player_hitbox_body_entered"]
+[connection signal="body_exited" from="PlayerHitbox" to="." method="_on_player_hitbox_body_exited"]
