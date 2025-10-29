@@ -42,6 +42,8 @@ func _process(delta: float) -> void:
 		velocity.y -= 1
 	if Input.is_action_pressed("attack_melee"):
 		_slash_attack()
+	if Input.is_action_just_pressed("attack_ranged"):
+		_ranged_attack()
 		
 	if not is_animation_playing:
 		if is_running:
@@ -85,6 +87,15 @@ func _slash_attack() -> void:
 		is_animation_playing = true
 		$AttackHitbox/CollisionShape2D.global_position = global_position + latest_orientation * 140
 		$AttackHitbox/CollisionShape2D.rotation = latest_orientation.angle()
+		$AttackTimer.start()
+		player_atk_cooldown = true
+		
+func _ranged_attack() -> void:
+	if not player_atk_cooldown:
+		$PlayerAnimation.play("range_attack")
+		var projectile = preload("res://projectile.tscn").instantiate()
+		self.add_child(projectile)
+		projectile.owner = self
 		$AttackTimer.start()
 		player_atk_cooldown = true
 	
