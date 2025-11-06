@@ -424,19 +424,21 @@ animations = [{
 }]
 
 [node name="Player" type="CharacterBody2D"]
+position = Vector2(81, 73)
+collision_layer = 3
 script = ExtResource("1_rx8dy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(75, 78)
+position = Vector2(0, 1)
 shape = SubResource("CircleShape2D_3wx4l")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(75, 65)
+position = Vector2(-1, -7)
 sprite_frames = SubResource("SpriteFrames_3brye")
 animation = &"FrontIdle"
 
 [node name="world camera" type="Camera2D" parent="."]
-position = Vector2(107, 57)
+position = Vector2(0, 1)
 limit_left = -1
 limit_top = 0
 limit_right = 4821

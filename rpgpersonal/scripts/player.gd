@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 
-const SPEED = 250.0
+const SPEED = 300
 var current_direction = "none"
 
 func _ready():
@@ -76,3 +76,5 @@ func play_anim(movement):
 			
 func player():
 	pass
+
+	
